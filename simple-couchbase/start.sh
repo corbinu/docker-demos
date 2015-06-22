@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PREFIX=ccic
+PREFIX=snd
 
 BOOT2DOCKER=$(docker info | grep boot2docker)
 if [[ $BOOT2DOCKER && ${BOOT2DOCKER-x} ]]
@@ -24,7 +24,7 @@ docker-compose pull
 
 echo
 echo 'Starting containers'
-docker-compose --project-name=$PREFIX up -d --no-recreate --timeout=240
+docker-compose --project-name=$PREFIX up -d --no-recreate --timeout=500
 
 echo
 echo -n 'Initilizing cluster.'
@@ -53,7 +53,8 @@ while [ $DEMORESPONSIVE != 1 ]; do
     RUNNING=$(docker inspect "$PREFIX"_demo_1 | json -a State.Running)
     if [ "$RUNNING" == "true" ]
     then
-        docker exec -it "$PREFIX"_demo_1 demo-bootstrap bootstrap
+        docker exec -it "$PREFIX"_demo_1 demo-bootstrap setup
+        docker exec -it "$PREFIX"_demo_1 demo-bootstrap production
         let DEMORESPONSIVE=1
     else
         sleep 1.3
@@ -65,7 +66,7 @@ if [ $DOCKER_TYPE = 'sdc' ]
     then
     DEMOIP="$(sdc-listmachines | json -aH -c "'"$PREFIX"_demo_1' == this.name" ips.1)"
     DEMOPORT="3000"
-    CBIP="$(sdc-listmachines | json -aH -c "'"$PREFIX"_couchbase_1' == this.name" ips.0)"
+    CBIP="$(sdc-listmachines | json -aH -c "'"$PREFIX"_couchbase_1' == this.name" ips.1)"
     CBPORT="8091"
 else
     CBPORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "8091/tcp") 0).HostPort}}' "$PREFIX"_couchbase_1)
@@ -82,7 +83,6 @@ fi
 CBDASHBOARD="$CBIP:$CBPORT"
 DEMO="$DEMOIP:$DEMOPORT"
 
-
 echo
 echo 'Couchbase cluster running and bootstrapped'
 echo "Dashboard: $CBDASHBOARD"
@@ -97,10 +97,10 @@ echo "UI: $DEMO"
 
 echo
 echo "Scale the consul using the following command:"
-echo "docker-compose --project-name=ccic scale consul=\$COUNT"
+echo "docker-compose --project-name=$PREFIX scale consul=\$COUNT"
 echo
 echo "Scale the database using the following command:"
-echo "docker-compose --project-name=ccic scale couchbase=\$COUNT"
+echo "docker-compose --project-name=$PREFIX scale couchbase=\$COUNT"
 
 if [ $DOCKER_TYPE = 'sdc' ]
     then
