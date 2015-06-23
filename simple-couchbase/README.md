@@ -6,6 +6,11 @@ It is tested on strait docker, boot2docker and Joyent's [Triton](https://www.joy
 
 Much thanks to [Casey Bisson](https://github.com/misterbisson) who created the original version.
 
+## Requirements
+1. [Docker](https://docs.docker.com/)
+2. [Docker Compose](https://docs.docker.com/compose/install/)
+
+
 ## Easy instructions
 
 1. clone or download this repo.
