@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PREFIX=snd
+PREFIX=sncb
 
 BOOT2DOCKER=$(docker info | grep boot2docker)
 if [[ $BOOT2DOCKER && ${BOOT2DOCKER-x} ]]
@@ -24,7 +24,7 @@ docker-compose pull
 
 echo
 echo 'Starting containers'
-docker-compose --project-name=$PREFIX up -d --no-recreate --timeout=500
+docker-compose --project-name=$PREFIX up -d --no-recreate --timeout=700
 
 echo
 echo -n 'Initilizing cluster.'
@@ -37,7 +37,7 @@ while [ $COUCHBASERESPONSIVE != 1 ]; do
     RUNNING=$(docker inspect "$PREFIX"_couchbase_1 | json -a State.Running)
     if [ "$RUNNING" == "true" ]
     then
-        docker exec -it "$PREFIX"_couchbase_1 triton-bootstrap bootstrap
+        docker exec -it "$PREFIX"_couchbase_1 consul-couchbase-bootstrap bootstrap
         let COUCHBASERESPONSIVE=1
     else
         sleep 1.3
@@ -95,9 +95,6 @@ echo 'Demo should be coming up'
 echo "UI: $DEMO"
 `open http://$DEMO`
 
-echo
-echo "Scale the consul using the following command:"
-echo "docker-compose --project-name=$PREFIX scale consul=\$COUNT"
 echo
 echo "Scale the database using the following command:"
 echo "docker-compose --project-name=$PREFIX scale couchbase=\$COUNT"
