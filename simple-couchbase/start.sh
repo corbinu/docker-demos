@@ -2,6 +2,8 @@
 
 PREFIX=sncb
 
+export DOCKER_CLIENT_TIMEOUT=300
+
 BOOT2DOCKER=$(docker info | grep boot2docker)
 if [[ $BOOT2DOCKER && ${BOOT2DOCKER-x} ]]
     then
@@ -24,7 +26,7 @@ docker-compose pull
 
 echo
 echo 'Starting containers'
-docker-compose --project-name=$PREFIX up -d --no-recreate --timeout=700
+docker-compose --project-name=$PREFIX up -d --no-recreate --timeout=150
 
 echo
 echo -n 'Initilizing cluster.'
