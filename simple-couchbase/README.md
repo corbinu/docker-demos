@@ -1,10 +1,11 @@
-# Simple Couchbase Node Example on a cluster in Docker containers
+# Simple Couchbase Node.js Example on a cluster in Docker containers
 
-This is a Docker Compose file and shell script that will deploy a Couchbase cluster that can be scaled easily using `docker compose scale couchbase=$n`.
+This example uses a Docker Compose file and a shell script that will deploy a Couchbase cluster that can be scaled easily using `docker compose scale couchbase=$n`.
 
-It is tested on strait docker, boot2docker and Joyent's [Triton](https://www.joyent.com/blog/understanding-triton-containers)
+It is tested on straight docker, boot2docker and Joyent's [Triton](https://www.joyent.com/blog/understanding-triton-containers).
 
 Much thanks to [Casey Bisson](https://github.com/misterbisson) who created the original version.
+
 
 ## Requirements
 1. [Docker](https://docs.docker.com/)
@@ -15,15 +16,16 @@ Much thanks to [Casey Bisson](https://github.com/misterbisson) who created the o
 
 1. clone or download this repo.
 1. `cd` into the cloned or downloaded directory.
-1. Execute `bash start.bash` to start everything up.
-1. The Couchbase dashboard should automatically open. Sign in with the user/pass printed in the output of `bash start.bash` to see the working, one-node cluster.
+1. Execute `bash start.sh` to start everything up.
+1. The Couchbase dashboard should automatically open. Sign in with the user/pass printed in the output of `bash start.sh` to see the working, one node cluster.
 1. Scale the cluster using `docker-compose --project-name=sncb scale up couchbase=$n` and watch the node(s) join the cluster in the Couchbase dashboard.
-1. The UI for the demo app will be on a port mapped to 3000 on the demo container
+
+The UI for the demo app will be on a port mapped to 3000 on the demo container.
 
 
 ## Detailed instructions
 
-The [`start.bash` script](https://raw.githubusercontent.com/corbinu/docker-demos/master/simple-couchbase/start.sh) automatically does the following:
+The [`start.sh` script](https://raw.githubusercontent.com/corbinu/docker-demos/master/simple-couchbase/start.sh) automatically does the following:
 
 ```bash
 docker-compose pull
@@ -38,9 +40,9 @@ The three services include:
 - Consul, to support service discovery and health checking among the different services
 - [Couchbase Node Demo](https://github.com/corbinu/consul-node-demo), a simple node travel app.
 
-Consul is running in it's default configuration as delivered in [Jeff Lindsay's excellent image](https://registry.hub.docker.com/u/progrium/consul/).
+Consul is running in its default configuration as delivered in [Jeff Lindsay's excellent image](https://registry.hub.docker.com/u/progrium/consul/).
 
-Once the first set of containers is running, the `start.bash` script bootstraps the Couchbase container with the following command:
+Once the first set of containers is running, the `start.sh` script bootstraps the Couchbase container with the following command:
 
 ```bash
 docker exec -it ccic_couchbase_1 consul-couchbase-bootstrap bootstrap
