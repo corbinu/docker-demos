@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PREFIX=snd
+PREFIX=cnd
 
 echo
 echo 'Stoping containers'

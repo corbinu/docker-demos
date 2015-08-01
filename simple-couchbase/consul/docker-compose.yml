@@ -1,0 +1,5 @@
+consul:
+    command: -server -bootstrap -ui-dir /ui
+    image: progrium/consul:latest
+    mem_limit: 256m
+    restart: always

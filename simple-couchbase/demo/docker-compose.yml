@@ -1,0 +1,6 @@
+demo:
+    image: corbinu/consul-node-demo
+    links:
+    - consul
+    mem_limit: 1024m
+    restart: always

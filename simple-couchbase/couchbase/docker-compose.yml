@@ -1,0 +1,11 @@
+couchbase:
+    image: corbinu/consul-couchbase
+    mem_limit: 2048m
+    environment:
+        CB_BUCKET_MEM: 512
+        CB_INDEX_MEM: 1000
+        CB_USERNAME: Administrator
+        CB_PASSWORD: password
+        CONSUL_IP:
+        CONSUL_PORT:
+    restart: always

@@ -1,0 +1,6 @@
+ssh:
+    image: corbinu/ssh-server
+    mem_limit: 256m
+    ports:
+    - 22
+    restart: always
