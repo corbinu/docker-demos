@@ -1,6 +1,11 @@
 demo:
     image: corbinu/consul-node-demo
-    links:
-    - consul
+    ports:
+    - 3000
+    environment:
+        CONSUL_IP:
+        CONSUL_PORT:
+        CB_BUCKET_MEM: 1048576
+        DEMO_WAIT: 10000
     mem_limit: 1024m
     restart: always

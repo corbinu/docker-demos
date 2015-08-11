@@ -24,6 +24,21 @@ echo
 echo 'Pulling the most recent images'
 docker-compose pull
 
+if [ $DOCKER_TYPE = 'sdc' ]
+    then
+    export CONSUL_IP="$(sdc-listmachines | json -aH -c "'"$PREFIX"_consul_1' == this.name" ips.0)"
+    export CONSUL_PORT="8500"
+else
+    if [ $DOCKER_TYPE = 'boot2docker' ]
+        then
+        export CONSUL_IP=$(boot2docker ip)
+        export CONSUL_PORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "8091/tcp") 0).HostPort}}' "$PREFIX"_consul_1)
+    else
+        export CONSUL_IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' "$PREFIX"_consul_1)
+        export CONSUL_PORT="8500"
+    fi
+fi
+
 echo
 echo 'Starting containers'
 docker-compose --project-name=$PREFIX up -d --no-recreate --timeout=150
@@ -45,7 +60,7 @@ echo
 
 if [ $DOCKER_TYPE = 'sdc' ]
     then
-    DEMOIP="$(sdc-listmachines | json -aH -c "'"$PREFIX"_demo_1' == this.name" ips.0)"
+    DEMOIP="$(sdc-listmachines | json -aH -c "'"$PREFIX"_demo_1' == this.name" ips.1)"
     DEMOPORT="3000"
 else
     DEMOPORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "3000/tcp") 0).HostPort}}' "$PREFIX"_demo_1)
@@ -58,14 +73,11 @@ else
 fi
 DEMO="$DEMOIP:$DEMOPORT"
 
+docker exec -it "$PREFIX"_demo_1 demo-bootstrap setup
+
 echo
 echo 'Demo should be coming up'
 echo "UI: $DEMO"
-`open http://$DEMO`
-
-if [ $DOCKER_TYPE = 'sdc' ]
-    then
-    docker exec -it "$PREFIX"_couchbase_1 triton-tune-bucket travel-sample
-fi
 
 docker exec -it "$PREFIX"_demo_1 demo-bootstrap production
+`open http://$DEMO`
