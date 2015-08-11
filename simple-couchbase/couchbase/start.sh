@@ -73,15 +73,9 @@ done
 
 sleep 30
 
-docker exec -it "$PREFIX"_couchbase_1 couchbase-cli bucket-create -c 127.0.01:8091 -u Administrator -p password \
-    --bucket=travel \
-    --bucket-type=couchbase \
-    --bucket-ramsize=512 \
-    --bucket-replica=0
-
 if [ $DOCKER_TYPE = 'sdc' ]
     then
-    CBIP="$(sdc-listmachines | json -aH -c "'"$PREFIX"_couchbase_1' == this.name" ips.0)"
+    CBIP="$(sdc-listmachines | json -aH -c "'"$PREFIX"_couchbase_1' == this.name" ips.1)"
     CBPORT="8091"
 else
     if [ $DOCKER_TYPE = 'boot2docker' ]
@@ -100,3 +94,5 @@ echo 'Couchbase cluster running and bootstrapped'
 echo "Dashboard: $CBDASHBOARD"
 echo "username=Administrator"
 echo "password=password"
+
+`open http://$CBDASHBOARD`
