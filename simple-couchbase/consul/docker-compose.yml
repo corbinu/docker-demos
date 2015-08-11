@@ -1,5 +1,7 @@
 consul:
     command: -server -bootstrap -ui-dir /ui
     image: progrium/consul:latest
+    ports:
+    - 8300
     mem_limit: 256m
     restart: always
