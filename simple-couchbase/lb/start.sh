@@ -35,7 +35,7 @@ else
     if [ $DOCKER_TYPE = 'boot2docker' ]
         then
         export CONSUL_IP=$(boot2docker ip)
-        export CONSUL_PORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "8091/tcp") 0).HostPort}}' "$PREFIX"_consul_1)
+        export CONSUL_PORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "8500/tcp") 0).HostPort}}' "$PREFIX"_consul_1)
     else
         export CONSUL_IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' "$PREFIX"_consul_1)
         export CONSUL_PORT="8500"
