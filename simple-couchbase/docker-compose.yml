@@ -1,0 +1,48 @@
+consul:
+    command: -server -bootstrap -ui-dir /ui
+    image: progrium/consul:latest
+    ports:
+    - 8500
+    mem_limit: 256m
+    restart: always
+
+lb:
+    command: load-balance
+    image: corbinu/consul-nginx
+    mem_limit: 1024m
+    environment:
+        CONSUL_IP:
+        CONSUL_PORT:
+        SERVICE: demo
+    ports:
+    - 80
+    restart: always
+
+couchbase:
+    image: corbinu/consul-couchbase
+    mem_limit: 4096m
+    ports:
+    - 8091
+    environment:
+        CB_BUCKET_MEM: 1024
+        CB_INDEX_MEM: 2000
+        CB_USERNAME: Administrator
+        CB_PASSWORD: password
+        COUCHBASE_SERVICE_INDEX: true
+        COUCHBASE_SERVICE_QUERY: true
+        COUCHBASE_SERVICE_DATA: true
+        CONSUL_IP:
+        CONSUL_PORT:
+    restart: always
+
+demo:
+    image: corbinu/consul-node-demo
+    ports:
+    - 3000
+    environment:
+        CONSUL_IP:
+        CONSUL_PORT:
+        CB_BUCKET_MEM: 1024
+        DEMO_WAIT: 10000
+    mem_limit: 1024m
+    restart: always
